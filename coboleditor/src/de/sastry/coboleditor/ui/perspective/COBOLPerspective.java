@@ -5,7 +5,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 public class COBOLPerspective implements IPerspectiveFactory {
-
+    
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
 	    defineActions(layout);
@@ -16,7 +16,7 @@ public class COBOLPerspective implements IPerspectiveFactory {
         // Add "new wizards".
         layout.addNewWizardShortcut("de.sastry.cobol.wizard.COBProjWiz");
         layout.addNewWizardShortcut("de.sastry.cobol.wizard.COBFilWiz");
-
+        layout.addNewWizardShortcut("de.sastry.cobol.wizard.JCLFilWiz");
         // Add "show views".
         layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
         layout.addShowViewShortcut(IPageLayout.ID_BOOKMARKS);
@@ -29,12 +29,11 @@ public class COBOLPerspective implements IPerspectiveFactory {
         // Editors are placed for free.
         String editorArea = layout.getEditorArea();
 
-        // Place navigator and outline to left of
-        // editor area.
+        // Place navigator and outline to left of editor area.
         IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.26, editorArea);
         left.addView(IPageLayout.ID_RES_NAV);
         //left.addView(IPageLayout.ID_OUTLINE);
         IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.72, editorArea);
-        right.addView(IPageLayout.ID_OUTLINE);        
+        right.addView(IPageLayout.ID_OUTLINE);
     }
 }

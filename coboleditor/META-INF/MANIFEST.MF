@@ -11,8 +11,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
- org.eclipse.ui.workbench.texteditor
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.jdt.core;bundle-version="3.8.2",
+ org.eclipse.core.resources;bundle-version="3.8.1",
+ org.eclipse.core.expressions;bundle-version="3.4.400",
+ org.eclipse.debug.core;bundle-version="3.7.100",
+ org.eclipse.ui.externaltools;bundle-version="3.2.100",
+ org.eclipse.ui.console;bundle-version="3.5.100"
 Eclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.eclipse.core.resources
+Bundle-ClassPath: .,
+ lib/commons-net-3.3.jar

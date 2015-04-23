@@ -1,0 +1,6 @@
+ALL:#!/bin/ksh
+ALL:pgm=`basename $0`
+ALL:export DD_INPFILE=$spool/INPFILE.txt
+ALL:export DD_OUTFILE=$spool/$pgm
+ALL:cmd="run.sh -d"
+ALL:$cmd [PROGNAME]

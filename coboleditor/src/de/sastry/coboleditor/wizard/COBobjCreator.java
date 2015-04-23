@@ -28,6 +28,8 @@ public class COBobjCreator {
 	static String CODE_FULLQUALIFIED_NATURE_ID = "CODE_Core.CODENature";
 	static String includes_cpbk="N";
     //$NON-NLS-1$ //$NON-NLS-2$
+	protected static JCLFile jclfile;
+	protected static COBFile cobfile;
     
 	public COBobjCreator() {
 		// TODO Auto-generated constructor stub
@@ -53,7 +55,12 @@ public class COBobjCreator {
 	    	  {
 	    		  srcfolder="dbora/pco/";
 	    		  where.add(srcfolder);
-	    	  }
+	    	  }	  
+	    	  if ( Extn.equals("cat") )
+	    	  {
+	    		  srcfolder="cat/";
+	    		  where.add(srcfolder);
+	    	  }	    	  
 	    	  for (int i=1;i < where.size();i++ )
 	    	  {
 //	              addToProjectStructure(project, paths);
@@ -140,13 +147,29 @@ public class COBobjCreator {
 			      folder = project.getFolder(srcfolder);
 			      createFolder(folder);		       
             }
-            System.out.println("got folder going to create file");
-			IFile file = folder.getFile(pgmname+"."+Extn);
-			String templatePath = "/resources/XXXXXX.txt";
-			createFile(file, templatePath,pgmname);
+            System.out.println("got folder going to create file:"+pgmname+"."+Extn);
+            IFile file;
+            String templatePath;
+            if ( Extn == "PCO" || Extn == "COB" )
+            {
+			   file = folder.getFile(pgmname+"."+Extn);
+			   templatePath = "/resources/cobolfile.txt";
+            }
+            else
+            {
+ 			   file = folder.getFile(pgmname);
+ 			   templatePath = "/resources/jclfile.txt";
+            }
+            StringBuilder sbuilder = readTemplate(file,templatePath);
+			String string = sbuilder.toString();            
+		    string=string.replace("[PROGNAME]", pgmname);		    
+			if (!file.exists()) {
+				ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(Charset.forName("UTF-8")));				
+				try { file.create(inputStream, IResource.NONE, null); } catch (Exception exception) { exception.printStackTrace(); }
+			}		    
 		}
 		
-		public static void createFile(IFile file, String templatePath,String pgmname) throws CoreException {
+		public static StringBuilder readTemplate(IFile file, String templatePath) throws CoreException {
 			InputStream inputStream = null;
 			BufferedReader input = null;
 			StringBuilder sbuilder = null;
@@ -173,19 +196,10 @@ public class COBobjCreator {
 					   if (Printedline.equals("Y")) { sbuilder.append("\n"); }
 				}
 			} catch (UnsupportedEncodingException e) { System.out.println("Problem reading buffer of input stream");e.printStackTrace(); }
-			String string = sbuilder.toString();
-			string=string.replace("[PROGNAME]", pgmname);
-			inputStream = new ByteArrayInputStream(string.getBytes(Charset.forName("UTF-8")));
-			if (!file.exists()) {
-				try {
-					file.create(inputStream, IResource.NONE, null);
-				} catch (Exception exception) {
-					exception.printStackTrace();
-				}
-			}
-
+			return sbuilder;
 		}
-	//manna	  
+	//manna
+		
 		private static void addBuilder(IProject project, String codeBuilderId) throws CoreException {
 			System.out.println(new Exception().getStackTrace()[0].getMethodName());
 			AbstractIncrementalProjectBuilder.addBuilder(project,CODE_FULLQUALIFIED_BUILDER_ID, true, null);

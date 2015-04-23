@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -25,6 +29,8 @@ import org.eclipse.swt.SWT;
 
 import de.dengot.coboleditor.logic.CobolReconcilingStrategy;
 import de.dengot.coboleditor.logic.WordDetector;
+import de.sastry.coboleditor.ui.contentassist.CobolContentAssistProcessor;
+import de.sastry.coboleditor.ui.hover.CobolTextHover;
 
 public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 {
@@ -47,7 +53,8 @@ public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 			"OR", "NOT", "COMPUTE", "ADD", "SUBSTRACT", "GIVING",
 			"FUNCTION", "REM", "MULTIPLY", "DIVIDE", "WHEN", "EVALUATE",
 			"END-EVALUATE", "OTHER", "INITIALIZE", "DELIMITED", "SIZE","STOP-RUN",
-			"INTO", "PROCEDURE" };
+			"INTO", "PROCEDURE","IDENTIFICATION","AUTHOR",
+			"INSTALLATION","DATE-WRITTEN","DATE-COMPILED","SOURCE-COMPUTER","OBJECT-COMPUTER"};
 	
 	private ITokenScanner fScanner;
 
@@ -55,6 +62,7 @@ public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 	{
 		fEditor = editor;
 		fScanner = this.getCobolScanner();
+		System.out.println("this is where it starts");
 	}
 
 	public IReconciler getReconciler(ISourceViewer sourceViewer)
@@ -63,15 +71,13 @@ public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 		MonoReconciler reconciler = new MonoReconciler(strategy, false);
 		reconciler.setProgressMonitor(new NullProgressMonitor());
 		//reconciler.setDelay(10000);
-
 		return reconciler;
 	}
 
 	/*
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getPresentationReconciler(org.eclipse.jface.text.source.ISourceViewer)
 	 */
-	public IPresentationReconciler getPresentationReconciler(
-			ISourceViewer sourceViewer)
+	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer)
 	{
 		PresentationReconciler reconciler = new PresentationReconciler();
 		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(fScanner);
@@ -84,8 +90,7 @@ public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 	{
 		RuleBasedScanner scanner = new RuleBasedScanner();
 
-		final String[] CONSTANTS = { "TRUE", "FALSE", "ZERO", "ZEROES",
-				"SPACE", "SPACES" };
+		final String[] CONSTANTS = { "TRUE", "FALSE", "ZERO", "ZEROES","SPACE", "SPACES" };
 
 		SyntaxColorProvider colorProvider = new SyntaxColorProvider();
 
@@ -120,5 +125,22 @@ public class CobolSourceViewerConfiguration extends SourceViewerConfiguration
 		scanner.setRules(ruleArray);
 		return scanner;
 	}
-
+	@Override
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+	     return new CobolTextHover();
+	}
+	
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+	        ContentAssistant assistant = new ContentAssistant();
+	        IContentAssistProcessor sharedProcessor = new CobolContentAssistProcessor();
+	                
+	        // define assist processor for each content type -> we use the same for all types here
+	        assistant.setContentAssistProcessor(sharedProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+	        assistant.setEmptyMessage("Sorry, no hint for you :-/");
+	        assistant.enableAutoActivation(true);
+	        assistant.setAutoActivationDelay(500);
+	        
+	        return assistant;
+	}		
 }

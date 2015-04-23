@@ -12,8 +12,8 @@ import org.eclipse.ui.IWorkbench;
 
 public class COBProjWizardPage extends Wizard implements INewWizard {
 
-	  protected COBOLProject one;
-	  protected COBOLFile two;
+	  protected COBProject one;
+	  protected COBFile two;
 	  public LinkedList<IWizardPage> pages = new LinkedList<IWizardPage>();
 	
 	  public COBProjWizardPage() {
@@ -28,8 +28,8 @@ public class COBProjWizardPage extends Wizard implements INewWizard {
 
 	  @Override
 	  public void addPages() {
-	    one = new COBOLProject();
-	    two = new COBOLFile();
+	    one = new COBProject();
+	    two = new COBFile();
 	    addPage(one);
 	    addPage(two);
 	  }
@@ -41,7 +41,7 @@ public class COBProjWizardPage extends Wizard implements INewWizard {
 	    System.out.println(two.getText1()+two.getText2());
 	    // create a new COBOL project...
 	    //final ProjectPage newProjectPage = (ProjectPage) this.pages.get(0);
-	    final COBOLProject newProjectPage = (COBOLProject) this.one;
+	    final COBProject newProjectPage = (COBProject) this.one;
 	    final String name = one.getText1();
 	    final String pgmname = two.getText1()+two.getText2();
 	    final String Extn = two.getExtn();

@@ -16,6 +16,10 @@ public class WordDetector implements IWordDetector
      */
     public boolean isWordPart(char character)
     {
+    	if ( character == '-' )
+    	{
+    	   return true;
+    	}
         return Character.isJavaIdentifierPart(character);
     }
 

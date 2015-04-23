@@ -14,13 +14,13 @@ import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
-public class COBFileWizardPage extends Wizard implements INewWizard {
+public class JCLWizardPage extends Wizard implements INewWizard {
 
-	  protected COBFile two;
+	  protected JCLFile jclfile;
 	  public LinkedList<IWizardPage> pages = new LinkedList<IWizardPage>();
 	  //private NewConfigFileWizardPage newFileWizardPage;
 	
-	  public COBFileWizardPage() {
+	  public JCLWizardPage() {
 	    super();
 	    setNeedsProgressMonitor(true);
 	  }
@@ -32,32 +32,20 @@ public class COBFileWizardPage extends Wizard implements INewWizard {
 
 	  @Override
 	  public void addPages() {
-	    two = new COBFile();
-	    addPage(two);
+		jclfile = new JCLFile();
+	    addPage(jclfile);
 	  }
 
 	@Override
 	public boolean performFinish() {
 	    // Print the result to the console
-	    System.out.println(two.getText1()+two.getText2());
-	    final String pgmname = two.getText1()+two.getText2();
-	    final String Extn = two.getExtn();
+	    System.out.println(jclfile.getPGMNAME());
+	    String scriptname=jclfile.scriptname();
   	    String srcfolder="";
-  	    if ( Extn.equals("COB") )
-  	    {
-  		  srcfolder="src/";
-  	    }
-  	    if ( Extn.equals("PCO") )
-  	    {
-  		  srcfolder="dbora/pco/";
-  	    }	    
+  		srcfolder="cat/";
+  		String Extn="cat";
 	    IProject project = getCurrentSelectedProject();
-	    try {
-			COBobjCreator.createFiles(project,pgmname,Extn,srcfolder);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    try { COBobjCreator.createFiles(project,scriptname,Extn,srcfolder); } catch (CoreException e) { e.printStackTrace(); }
 	    return true;
 	}
 

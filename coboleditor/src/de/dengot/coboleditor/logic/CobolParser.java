@@ -6,6 +6,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 
+
 import de.dengot.coboleditor.model.CobolDivision;
 import de.dengot.coboleditor.model.CobolProgram;
 import de.dengot.coboleditor.model.CobolSection;
@@ -14,7 +15,7 @@ import de.dengot.coboleditor.ui.editor.CobolSourceViewerConfiguration;
 public class CobolParser
 {
 	// die ersten 7 Zeichen sind zu ignorieren
-	private final int COLUMN_PARSE_OFFSET = 7;
+	public final static int COLUMN_PARSE_OFFSET = 7;
 
 	private final String DIVISION = "DIVISION";
 
@@ -45,7 +46,6 @@ public class CobolParser
 			this.document = doc;
 			this.lineNo = 0;
 			this.lineCount = this.document.getNumberOfLines();
-
 			this.currentProgram = new CobolProgram(programName, 0, document.getLength());
 			this.parseCobolProgram();
 			initialised=true;
@@ -66,7 +66,7 @@ public class CobolParser
 		{
 			IRegion region = document.getLineInformation(lineNo);
 			String text = document.get(region.getOffset(), region.getLength());
-
+            //System.out.println(text);
 			if (text.length() > COLUMN_PARSE_OFFSET && text.charAt(COLUMN_PARSE_OFFSET - 1) != '*')
 			{
 				if (text.contains(DIVISION))
@@ -106,9 +106,10 @@ public class CobolParser
 			   }
 			}
 		}
-		System.out.println("parsing done");		
+		System.out.println("parsing done");
+		
 	}
-
+	
 	private String parseDivisionName(String text)
 	{
 		return text.substring(COLUMN_PARSE_OFFSET, text.indexOf(DIVISION)).trim()+ " " + DIVISION;

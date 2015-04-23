@@ -6,7 +6,7 @@
       <editor
             class="de.dengot.coboleditor.ui.editor.CobolEditor"
             default="true"
-            extensions="cob"
+            extensions="cob,pco"
             icon="icons/notepad.gif"
             id="de.dengot.coboleditor.ui.editor.CobolEditor"
             name="CobolEditor"/>
@@ -41,6 +41,33 @@
             name="COBOL Source file"
             project="false">
       </wizard>
+      <wizard
+            class="de.sastry.coboleditor.wizard.JCLWizardPage"
+            icon="icons/executable.gif"
+            id="de.sastry.cobol.wizard.JCLFilWiz"
+            name="JCL file"
+            project="false">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.views.ResourceNavigator">
+         <command
+               commandId="de.sastry.coboleditor.ftp.ftpcommand"
+               label="FTP"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="de.sastry.coboleditor.ftp.ftphandler"
+            id="de.sastry.coboleditor.ftp.ftpcommand"
+            name="ftpcommand">
+      </command>
    </extension>
 
 </plugin>
